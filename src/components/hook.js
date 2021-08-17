@@ -1,4 +1,4 @@
-import React, { useReducer, useState } from "react";
+import React, { useReducer, useState, useContext, useEffect } from "react";
 
 const initial = {
   n: 10
@@ -13,6 +13,8 @@ const reducer = (state, action) => {
     throw new Error("unknown type");
   }
 };
+
+const Context = React.createContext(null);
 
 export default function App() {
   const [name, setName] = useState({
@@ -61,6 +63,33 @@ export default function App() {
       >
         multi
       </button>
+      <br />
+      <Context.Provider value={{ name, setName }}>
+        <User></User>
+      </Context.Provider>
     </>
+  );
+}
+
+function User() {
+  const context = useContext(Context);
+  const { name, setName } = context;
+  useEffect(() => {
+    console.log("User组件渲染时调用");
+  });
+  return (
+    <div>
+      {name.name} - {name.age}
+      <button
+        onClick={() => {
+          setName({
+            name: "xiaoli",
+            age: 20
+          });
+        }}
+      >
+        set age
+      </button>
+    </div>
   );
 }
